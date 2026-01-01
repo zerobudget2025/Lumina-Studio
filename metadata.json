@@ -1,0 +1,7 @@
+{
+  "name": "Lumina Image Studio",
+  "description": "A professional-grade AI image generation and editing suite powered by Gemini 2.5 Flash Image. Create, refine, and transform visual ideas into reality.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
