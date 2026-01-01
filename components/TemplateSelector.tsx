@@ -40,7 +40,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     { id: 'instagram', label: 'Instagram', color: 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600' },
     { id: 'twitch', label: 'Twitch', color: 'bg-purple-600' },
     { id: 'facebook', label: 'Facebook', color: 'bg-blue-600' },
-    { id: 'devto', label: 'DEV.to', color: 'bg-slate-900 border-slate-700' },
+    { id: 'devto', label: 'DEV.to', color: 'bg-slate-900 border-slate-700 text-white' },
   ];
 
   const filteredTemplates = TEMPLATES.filter(t => t.platform === selectedPlatform);
