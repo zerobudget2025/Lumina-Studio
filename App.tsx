@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ControlPanel from './components/ControlPanel';
@@ -161,8 +162,17 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="py-12 border-t border-slate-900 text-center text-slate-600 text-[10px] uppercase tracking-widest font-medium">
-        <p>&copy; 2024 Lumina Studio &bull; Next-Gen Social Creative Suite</p>
+      <footer className="py-12 border-t border-slate-900/50 glass flex flex-col items-center justify-center space-y-2">
+        <p className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-bold">
+          &copy; 2024 Lumina Studio &bull; Next-Gen Social Creative Suite
+        </p>
+        <div className="flex items-center gap-3">
+          <div className="h-px w-8 bg-slate-800"></div>
+          <p className="text-slate-400 text-[11px] font-medium tracking-wide">
+            a <span className="text-blue-400">NightOwl</span> creation &bull; Property of <span className="text-purple-400">Just Me Media</span> (copyright)
+          </p>
+          <div className="h-px w-8 bg-slate-800"></div>
+        </div>
       </footer>
     </div>
   );

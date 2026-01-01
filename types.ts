@@ -1,7 +1,7 @@
 
 export type AspectRatio = '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
 
-export type Platform = 'youtube' | 'instagram' | 'twitch' | 'facebook' | 'devto' | 'manual';
+export type Platform = 'youtube' | 'instagram' | 'twitch' | 'facebook' | 'devto' | 'mux' | 'manual' | 'x' | 'snapchat' | 'tiktok';
 
 export interface Template {
   id: string;
