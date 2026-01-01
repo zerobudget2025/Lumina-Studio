@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { GenerationParams } from "../types";
 
@@ -7,7 +6,7 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   const apiKey = process.env.API_KEY;
 
   if (!apiKey) {
-    throw new Error("API Key is not configured.");
+    throw new Error("API Key is not configured. Please ensure you are in a supported environment.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -15,9 +14,13 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   const parts: any[] = [{ text: params.prompt }];
   
   if (params.baseImage) {
+    const base64Data = params.baseImage.includes(',') 
+      ? params.baseImage.split(',')[1] 
+      : params.baseImage;
+      
     parts.unshift({
       inlineData: {
-        data: params.baseImage.split(',')[1],
+        data: base64Data,
         mimeType: 'image/png'
       }
     });
@@ -30,13 +33,17 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
       imageConfig: {
         aspectRatio: params.aspectRatio,
         ...(params.isPro ? { imageSize: "1K" } : {})
-      }
+      },
+      // Pro model can use google search for better contextual understanding of current events
+      ...(params.isPro ? { tools: [{ googleSearch: {} }] } : {})
     },
   });
 
   let imageUrl = '';
-  if (response.candidates && response.candidates[0].content.parts) {
-    for (const part of response.candidates[0].content.parts) {
+  const candidate = response.candidates?.[0];
+  
+  if (candidate?.content?.parts) {
+    for (const part of candidate.content.parts) {
       if (part.inlineData) {
         imageUrl = `data:image/png;base64,${part.inlineData.data}`;
         break;
@@ -45,7 +52,7 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   }
 
   if (!imageUrl) {
-    throw new Error("No image data returned from the model.");
+    throw new Error("No image data returned. The prompt might have been blocked by safety filters or a generation error occurred.");
   }
 
   return { imageUrl, model: modelName };

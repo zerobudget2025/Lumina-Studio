@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ControlPanel from './components/ControlPanel';
@@ -15,8 +14,9 @@ const App: React.FC = () => {
   const [isPro, setIsPro] = useState(false);
   const [selectedBaseImage, setSelectedBaseImage] = useState<string | null>(null);
 
+  // Initial load
   useEffect(() => {
-    const saved = localStorage.getItem('lumina_history_v2');
+    const saved = localStorage.getItem('lumina_history_v3');
     if (saved) {
       try {
         setHistory(JSON.parse(saved));
@@ -26,8 +26,16 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // Save with error handling (QuotaExceededError is common with large base64 strings)
   useEffect(() => {
-    localStorage.setItem('lumina_history_v2', JSON.stringify(history));
+    try {
+      localStorage.setItem('lumina_history_v3', JSON.stringify(history));
+    } catch (e) {
+      console.warn("Storage full, trimming history further...");
+      if (history.length > 5) {
+        setHistory(prev => prev.slice(0, 5));
+      }
+    }
   }, [history]);
 
   const handleTogglePro = async () => {
@@ -61,23 +69,25 @@ const App: React.FC = () => {
       const newImage: GeneratedImage = {
         id: Math.random().toString(36).substring(7),
         url: result.imageUrl,
-        prompt: params.prompt, // Store original prompt for user reference
+        prompt: params.prompt,
         timestamp: Date.now(),
         aspectRatio: params.aspectRatio,
         model: result.model
       };
 
       setCurrentImage(newImage);
-      setHistory(prev => [newImage, ...prev].slice(0, 50)); // Keep last 50
+      // Stricter limit for history because base64 strings consume significant memory/storage
+      setHistory(prev => [newImage, ...prev].slice(0, 8)); 
       setSelectedBaseImage(null);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An unexpected error occurred during generation.");
+      let message = err.message || "An unexpected error occurred.";
       
-      if (err.message && err.message.includes("Requested entity was not found")) {
-        setError("Pro Model Error: Please re-select your API key via the Pro button.");
+      if (message.includes("Requested entity was not found")) {
+        message = "Pro Model Error: Your current API key doesn't have access to Gemini 3 Pro. Re-select a paid-tier key.";
         setIsPro(false);
       }
+      setError(message);
     } finally {
       setIsGenerating(false);
     }
@@ -121,7 +131,7 @@ const App: React.FC = () => {
                   <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                  <span className="font-bold">Error</span>
+                  <span className="font-bold uppercase tracking-wider">Generation Error</span>
                 </div>
                 {error}
               </div>

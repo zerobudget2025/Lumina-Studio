@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface HeaderProps {
@@ -28,12 +27,12 @@ const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
                 : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
             }`}
           >
-            {isPro ? '✨ PRO ACTIVE' : 'GO PRO'}
+            {isPro ? '✨ PRO ENGINE' : 'GO PRO'}
           </button>
           
-          <div className="hidden sm:flex items-center gap-2 text-slate-400 text-sm">
-            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            Gemini 2.5 Active
+          <div className="hidden sm:flex items-center gap-2 text-slate-400 text-xs font-medium uppercase tracking-wider">
+            <span className={`w-2 h-2 rounded-full animate-pulse ${isPro ? 'bg-purple-500' : 'bg-blue-500'}`}></span>
+            {isPro ? 'Gemini 3 Pro' : 'Gemini 2.5 Flash'}
           </div>
         </div>
       </div>
