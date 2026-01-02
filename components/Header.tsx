@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface HeaderProps {
@@ -7,33 +8,41 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
   return (
-    <header className="sticky top-0 z-50 glass border-b border-slate-800/50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-7xl">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+    <header className="sticky top-0 z-50 glass border-b border-slate-800/30">
+      <div className="container mx-auto px-6 h-20 flex items-center justify-between max-w-7xl">
+        <div className="flex items-center gap-4">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-blue-500 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div className="w-12 h-12 bg-white text-slate-950 rounded-2xl flex items-center justify-center shadow-2xl relative">
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
           </div>
-          <h1 className="text-xl font-bold tracking-tight">Lumina <span className="gradient-text">Studio</span></h1>
+          <div>
+            <h1 className="text-xl font-black tracking-tighter leading-none">LUMINA <span className="text-blue-500">PRO</span></h1>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">by NightOwl Studio</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">
+          <div className="hidden md:flex flex-col items-end mr-2">
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Active Model</span>
+            <span className={`text-[10px] font-black uppercase ${isPro ? 'text-purple-400' : 'text-blue-400'}`}>
+              {isPro ? 'Gemini 3 Pro 1K' : 'Gemini 2.5 Flash'}
+            </span>
+          </div>
+          
           <button 
             onClick={onTogglePro}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 border ${
+            className={`px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 border-2 ${
               isPro 
-                ? 'bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-500/20' 
-                : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
+                ? 'bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-500/20 scale-105' 
+                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
             }`}
           >
-            {isPro ? '✨ PRO ENGINE' : 'GO PRO'}
+            {isPro ? 'PRO ACTIVE' : 'UPGRADE'}
           </button>
-          
-          <div className="hidden sm:flex items-center gap-2 text-slate-400 text-xs font-medium uppercase tracking-wider">
-            <span className={`w-2 h-2 rounded-full animate-pulse ${isPro ? 'bg-purple-500' : 'bg-blue-500'}`}></span>
-            {isPro ? 'Gemini 3 Pro' : 'Gemini 2.5 Flash'}
-          </div>
         </div>
       </div>
     </header>

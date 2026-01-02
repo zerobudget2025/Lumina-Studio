@@ -1,18 +1,43 @@
 import { GoogleGenAI } from "@google/genai";
 import { GenerationParams } from "../types";
 
+/**
+ * Uses Gemini Flash to expand simple prompts into professional, high-detail instructions
+ * for the image generation model.
+ */
+export const enhancePrompt = async (prompt: string): Promise<string> => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `You are a professional prompt engineer for state-of-the-art AI image generators. 
+      Take the following user idea and expand it into a highly detailed, descriptive, and artistic prompt. 
+      Include specifics about lighting (e.g., volumetric, cinematic), texture (e.g., detailed skin, fabric weave), 
+      camera angle (e.g., low angle, macro), and artistic style (e.g., photorealistic, cyberpunk, oil painting). 
+      Return ONLY the enhanced prompt text without any preamble.
+      
+      User idea: "${prompt}"`,
+    });
+    return response.text?.trim() || prompt;
+  } catch (e) {
+    console.error("Prompt enhancement failed", e);
+    return prompt;
+  }
+};
+
 export const generateImage = async (params: GenerationParams): Promise<{ imageUrl: string; model: string }> => {
   const modelName = params.isPro ? 'gemini-3-pro-image-preview' : 'gemini-2.5-flash-image';
   const apiKey = process.env.API_KEY;
 
   if (!apiKey) {
-    throw new Error("API Key is not configured. Please ensure you are in a supported environment.");
+    throw new Error("API Key is not configured.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
 
   const parts: any[] = [{ text: params.prompt }];
   
+  // If there is a base image for refinement (Img2Img)
   if (params.baseImage) {
     const base64Data = params.baseImage.includes(',') 
       ? params.baseImage.split(',')[1] 
@@ -32,9 +57,10 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
     config: {
       imageConfig: {
         aspectRatio: params.aspectRatio,
+        // High quality resolution for Pro users
         ...(params.isPro ? { imageSize: "1K" } : {})
       },
-      // Pro model can use google search for better contextual understanding of current events
+      // Pro users get real-time info grounding
       ...(params.isPro ? { tools: [{ googleSearch: {} }] } : {})
     },
   });
@@ -52,7 +78,7 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   }
 
   if (!imageUrl) {
-    throw new Error("No image data returned. The prompt might have been blocked by safety filters or a generation error occurred.");
+    throw new Error("Image generation failed. This may be due to safety filters or a network error.");
   }
 
   return { imageUrl, model: modelName };
