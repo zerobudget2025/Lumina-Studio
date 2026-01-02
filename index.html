@@ -1,23 +1,31 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-studio-author="NightOwl" data-studio-owner="JustMeMedia">
 <head>
+    <!-- 
+      PRODUCT: Lumina Image Studio 
+      AUTHOR: NightOwl 
+      OWNER: Just Me Media 
+      COPYRIGHT: 2024 Just Me Media. All Rights Reserved.
+      UNAUTHORIZED REDISTRIBUTION IS TRACKED.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina Image Studio</title>
+    <title>Lumina Image Studio | Powered by NightOwl</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: #020617;
             color: #f8fafc;
         }
         .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .gradient-text {
             background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
@@ -28,21 +36,19 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a;
+            background: #020617;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: #1e293b;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+            background: #334155;
         }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        /* Anti-tamper styles */
+        .studio-signature {
+            pointer-events: none !important;
+            user-select: none !important;
         }
     </style>
 <script type="importmap">

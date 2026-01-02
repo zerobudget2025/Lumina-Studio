@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { GenerationParams } from "../types";
 
@@ -20,7 +21,7 @@ export const enhancePrompt = async (prompt: string): Promise<string> => {
     });
     return response.text?.trim() || prompt;
   } catch (e) {
-    console.error("Prompt enhancement failed", e);
+    console.error("[LUMINA_CORE] Prompt enhancement failed", e);
     return prompt;
   }
 };
@@ -30,14 +31,16 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   const apiKey = process.env.API_KEY;
 
   if (!apiKey) {
-    throw new Error("API Key is not configured.");
+    throw new Error("LUMINA_CORE: API Key missing.");
   }
+
+  // Internal trace signature
+  console.debug(`[LUMINA_ENGINE] Processing request for ${modelName} by NightOwl Studio.`);
 
   const ai = new GoogleGenAI({ apiKey });
 
   const parts: any[] = [{ text: params.prompt }];
   
-  // If there is a base image for refinement (Img2Img)
   if (params.baseImage) {
     const base64Data = params.baseImage.includes(',') 
       ? params.baseImage.split(',')[1] 
@@ -57,10 +60,8 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
     config: {
       imageConfig: {
         aspectRatio: params.aspectRatio,
-        // High quality resolution for Pro users
         ...(params.isPro ? { imageSize: "1K" } : {})
       },
-      // Pro users get real-time info grounding
       ...(params.isPro ? { tools: [{ googleSearch: {} }] } : {})
     },
   });
@@ -78,7 +79,7 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   }
 
   if (!imageUrl) {
-    throw new Error("Image generation failed. This may be due to safety filters or a network error.");
+    throw new Error("Lumina Error: Content generation blocked by safety filters.");
   }
 
   return { imageUrl, model: modelName };

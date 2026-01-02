@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { GeneratedImage } from '../types';
 
@@ -55,13 +56,17 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
   if (!image) {
     return (
       <div className="w-full max-w-2xl aspect-square bg-slate-900/30 rounded-[3rem] overflow-hidden shadow-inner flex flex-col items-center justify-center p-12 border border-slate-800/30 border-dashed group transition-all hover:bg-slate-900/40">
-        <div className="w-24 h-24 text-slate-800 mb-8 group-hover:text-slate-700 group-hover:scale-110 transition-all duration-700">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <div className="w-32 h-32 text-slate-800 mb-8 group-hover:text-blue-500/50 group-hover:scale-110 transition-all duration-700">
+          {/* Aethelred Owl Placeholder */}
+          <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.5 4L7 6M19.5 4L17 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+            <path d="M12 21C16 19.5 19.5 15.5 19.5 9.5C19.5 5 16 3 12 3C8 3 4.5 5 4.5 9.5C4.5 15.5 8 19.5 12 21Z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
+            <circle cx="9" cy="9.5" r="2" fill="currentColor" fillOpacity="0.2"/>
+            <circle cx="15" cy="9.5" r="2" fill="currentColor" fillOpacity="0.2"/>
           </svg>
         </div>
         <h3 className="text-2xl font-black text-slate-500 uppercase tracking-tighter">Canvas Pending</h3>
-        <p className="mt-3 text-slate-600 text-center max-w-xs text-sm font-medium">Use the left panel to define your artistic direction and start the generation process.</p>
+        <p className="mt-3 text-slate-600 text-center max-w-xs text-sm font-medium italic">Define your prompt and let NightOwl visualize your thoughts.</p>
       </div>
     );
   }
@@ -109,9 +114,10 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
       </div>
 
       <div className="glass rounded-[2.5rem] p-10 border-slate-800/40 relative overflow-hidden group shadow-2xl backdrop-blur-3xl">
-        <div className="absolute -top-12 -right-12 p-8 opacity-5 group-hover:opacity-10 transition-all duration-1000 rotate-12 group-hover:rotate-0">
-          <svg className="w-48 h-48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+        <div className="absolute -top-12 -right-12 p-8 opacity-5 group-hover:opacity-10 transition-all duration-1000 rotate-12 group-hover:rotate-0 text-slate-500">
+           <svg className="w-48 h-48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.5 4L7 6M19.5 4L17 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+              <path d="M12 21C16 19.5 19.5 15.5 19.5 9.5C19.5 5 16 3 12 3C8 3 4.5 5 4.5 9.5C4.5 15.5 8 19.5 12 21Z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
           </svg>
         </div>
         <div className="space-y-6 relative">
@@ -135,7 +141,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
              </div>
              <div className="flex flex-col gap-1">
                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Rights</span>
-               <span className="text-sm font-bold text-slate-100">Just Me Media &copy;</span>
+               <span className="text-sm font-bold text-slate-100">Open Source (MIT)</span>
              </div>
           </div>
         </div>

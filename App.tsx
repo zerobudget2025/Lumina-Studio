@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ControlPanel from './components/ControlPanel';
@@ -14,28 +15,35 @@ const App: React.FC = () => {
   const [isPro, setIsPro] = useState(false);
   const [selectedBaseImage, setSelectedBaseImage] = useState<string | null>(null);
   
-  // Remix States
   const [remixPrompt, setRemixPrompt] = useState<string | undefined>();
   const [remixRatio, setRemixRatio] = useState<AspectRatio | undefined>();
 
-  // Initial load
   useEffect(() => {
+    // Open Source Identity Signature
+    console.log(
+      "%cLUMINA OS %cBY NIGHTOWL",
+      "color: white; background: #3b82f6; padding: 5px 10px; border-radius: 5px 0 0 5px; font-weight: 900;",
+      "color: white; background: #64748b; padding: 5px 10px; border-radius: 0 5px 5px 0; font-weight: 900;"
+    );
+    console.log(
+      "%cWelcome to the Open Source version of Lumina Studio. MIT Licensed.",
+      "color: #64748b; font-size: 10px; font-weight: bold;"
+    );
+
     const saved = localStorage.getItem('lumina_history_v3');
     if (saved) {
       try {
         setHistory(JSON.parse(saved));
       } catch (e) {
-        console.error("Failed to parse history", e);
+        console.error("Lumina Storage Access Error", e);
       }
     }
   }, []);
 
-  // Save with error handling (QuotaExceededError is common with large base64 strings)
   useEffect(() => {
     try {
       localStorage.setItem('lumina_history_v3', JSON.stringify(history));
     } catch (e) {
-      console.warn("Storage full, trimming history further...");
       if (history.length > 5) {
         setHistory(prev => prev.slice(0, 5));
       }
@@ -80,18 +88,14 @@ const App: React.FC = () => {
       };
 
       setCurrentImage(newImage);
-      // Stricter limit for history because base64 strings consume significant memory/storage
       setHistory(prev => [newImage, ...prev].slice(0, 10)); 
       setSelectedBaseImage(null);
-      // Clear remix states after successful generation
       setRemixPrompt(undefined);
       setRemixRatio(undefined);
     } catch (err: any) {
-      console.error(err);
       let message = err.message || "An unexpected error occurred.";
-      
       if (message.includes("Requested entity was not found")) {
-        message = "Pro Model Error: Your current API key doesn't have access to Gemini 3 Pro. Re-select a paid-tier key.";
+        message = "Pro Tier Unavailable: Key mismatch detected. Re-verify via Upgrade button.";
         setIsPro(false);
       }
       setError(message);
@@ -124,7 +128,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-blue-500/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-blue-500/30" data-studio-version="3.0.0-PRO">
       <Header isPro={isPro} onTogglePro={handleTogglePro} />
       
       <main className="flex-1 container mx-auto px-4 py-12 lg:px-8 max-w-7xl">
@@ -148,7 +152,7 @@ const App: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
-                  <span className="font-black uppercase tracking-widest text-[10px]">Critical Engine Alert</span>
+                  <span className="font-black uppercase tracking-widest text-[10px]">System Event</span>
                 </div>
                 <p className="font-medium pl-1">{error}</p>
               </div>
@@ -181,12 +185,12 @@ const App: React.FC = () => {
 
       <footer className="py-16 border-t border-slate-900/50 glass flex flex-col items-center justify-center space-y-4">
         <p className="text-slate-600 text-[10px] uppercase tracking-[0.4em] font-black">
-          &copy; 2024 Just Me Media &bull; Studio Lumina Core
+          &copy; 2024 Just Me Media &bull; Open Source Initiative
         </p>
         <div className="flex items-center gap-4">
           <div className="h-px w-12 bg-slate-900"></div>
           <p className="text-slate-400 text-[12px] font-bold tracking-widest uppercase">
-            a <span className="text-blue-500">NightOwl</span> creation &bull; Property of <span className="text-purple-500">Just Me Media</span> &copy;
+            a <span className="text-blue-500">NightOwl</span> project &bull; MIT Licensed &copy;
           </p>
           <div className="h-px w-12 bg-slate-900"></div>
         </div>

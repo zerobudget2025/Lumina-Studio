@@ -12,24 +12,41 @@ const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
       <div className="container mx-auto px-6 h-20 flex items-center justify-between max-w-7xl">
         <div className="flex items-center gap-4">
           <div className="relative group">
-            <div className="absolute inset-0 bg-blue-500 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div className="w-12 h-12 bg-white text-slate-950 rounded-2xl flex items-center justify-center shadow-2xl relative">
-              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <div className="absolute inset-0 bg-blue-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+            <div className="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden border border-slate-800 group-hover:border-blue-500/50 transition-colors ring-1 ring-white/5 shadow-inner">
+              {/* Refined NightOwl "Aethelred" Logo */}
+              <svg className="w-9 h-9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* The "V" Horns/Tufts */}
+                <path d="M4.5 4L7 6M19.5 4L17 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                {/* Head Silhouette */}
+                <path d="M12 21C16 19.5 19.5 15.5 19.5 9.5C19.5 5 16 3 12 3C8 3 4.5 5 4.5 9.5C4.5 15.5 8 19.5 12 21Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                {/* Facial Disk Overlay */}
+                <path d="M12 18.5C15 17 18 13.5 18 9.5C18 7 15.5 5.5 12 5.5C8.5 5.5 6 7 6 9.5C6 13.5 9 17 12 18.5Z" stroke="currentColor" strokeWidth="1" strokeOpacity="0.2" strokeLinejoin="round"/>
+                {/* Vision Centers */}
+                <circle cx="9" cy="9.5" r="2" fill="currentColor"/>
+                <circle cx="15" cy="9.5" r="2" fill="currentColor"/>
+                {/* Contrast Pupils */}
+                <circle cx="9.5" cy="9" r="0.5" fill="black" fillOpacity="0.4"/>
+                <circle cx="15.5" cy="9" r="0.5" fill="black" fillOpacity="0.4"/>
+                {/* Beak */}
+                <path d="M11.5 13.5L12 15L12.5 13.5H11.5Z" fill="currentColor"/>
               </svg>
             </div>
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-tighter leading-none">LUMINA <span className="text-blue-500">PRO</span></h1>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">by NightOwl Studio</p>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-black tracking-tighter leading-none uppercase">Lumina</h1>
+              <span className="px-1.5 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-black text-blue-400 tracking-widest">OS</span>
+            </div>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1 italic opacity-70">by NightOwl Studio</p>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="hidden md:flex flex-col items-end mr-2">
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Active Model</span>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Global Engine</span>
             <span className={`text-[10px] font-black uppercase ${isPro ? 'text-purple-400' : 'text-blue-400'}`}>
-              {isPro ? 'Gemini 3 Pro 1K' : 'Gemini 2.5 Flash'}
+              {isPro ? 'Gemini 3 Pro' : 'Gemini 2.5 Flash'}
             </span>
           </div>
           
