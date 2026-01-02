@@ -1,39 +1,32 @@
+# Lumina Image Studio v3.0 ✨
+**Professional-Grade AI Creative Suite powered by NightOwl.**
 
-# Lumina Image Studio ✨
-
-**Next-Gen Social Creative Suite powered by Google Gemini.**
-
-Lumina Studio is a professional-grade AI image generation and editing suite designed specifically for creators. A **NightOwl** creation, property of **Just Me Media**.
+Lumina OS is a high-fidelity image generation platform built for creators who demand precision. Featuring the iconic **Aethelred Owl Mark**, it represents the pinnacle of AI-driven visual storytelling using the latest Gemini engines.
 
 ---
 
-## 🖼️ UI Preview & Examples
-
-Lumina provides precision-tailored templates to turn your ideas into high-fidelity visuals instantly across platforms like YouTube, X, TikTok, and more.
-
----
-
-## 🚀 Authorship & Ownership
-
-- **Lead Developer**: NightOwl
-- **Owner**: Just Me Media
-- **Engine**: Google Gemini AI (Flash & Pro)
+## 🦉 Brand Identity: The Aethelred Mark
+The signature owl logo with its distinct "V" tufts represents alert intelligence and nocturnal vision. In Lumina, it signifies our AI's ability to see through the "noise" of a simple prompt to generate crystalline visual results.
 
 ---
 
-## 🛠 Supported Platforms
-
-| Platform | Category | Ratio |
-| :--- | :--- | :--- |
-| **YouTube** | Social | 16:9 / 1:1 |
-| **X (Twitter)** | Social | 16:9 |
-| **TikTok** | Social | 9:16 / 1:1 |
-| **Snapchat** | Social | 9:16 |
-| **DEV.to** | Developer | 16:9 / 1:1 |
-| **MUX** | Developer | 16:9 / 1:1 |
+## 🚀 Key Features (v3.0 Stable)
+- **Dual-Engine Architecture**: Seamlessly switch between **Gemini 2.5 Flash** (Speed) and **Gemini 3 Pro** (Ultra Fidelity).
+- **The Synthesizer**: Built-in AI Prompt Enhancer that transforms basic ideas into professional, descriptive instructions.
+- **Source Grounding**: For Pro users, Lumina identifies and lists research sources used by the AI to inform generations.
+- **Precision Templates**: Over 15+ tailored presets for YouTube, X, TikTok, DEV.to, and more.
+- **Pro Workflow**: Native support for `Cmd + Enter` / `Ctrl + Enter` generation and reference image remixing.
 
 ---
 
-## 📄 License
+## 🛠 Tech Stack
+- **AI Core**: Google GenAI SDK (Gemini 2.5/3.0)
+- **Frontend**: React 19 (Native ES6 Modules via esm.sh)
+- **Styling**: Tailwind CSS + Glassmorphism Suite
+- **Distribution**: PWA Ready with high-res manifest icons
 
-This project is licensed under the **MIT License**. Copyright &copy; 2024 Just Me Media. Developed by NightOwl.
+---
+
+## 📄 License & Credits
+Developed by **NightOwl**. Property of **Just Me Media**.
+Licensed under the **MIT License**. Copyright © 2024 Just Me Media.

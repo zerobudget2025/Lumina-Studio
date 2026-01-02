@@ -19,12 +19,16 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
     }
   };
 
+  // Helper to extract grounding sources
+  // @ts-ignore
+  const sources = image?.groundingSources || [];
+
   const handleShare = async () => {
     if (!image) return;
     try {
       if (navigator.share) {
         await navigator.share({
-          title: 'Masterpiece from Lumina Studio',
+          title: 'Vision from Lumina Studio',
           text: `Check out this AI-generated vision: "${image.prompt}"`,
           url: window.location.href,
         });
@@ -57,7 +61,6 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
     return (
       <div className="w-full max-w-2xl aspect-square bg-slate-900/30 rounded-[3rem] overflow-hidden shadow-inner flex flex-col items-center justify-center p-12 border border-slate-800/30 border-dashed group transition-all hover:bg-slate-900/40">
         <div className="w-32 h-32 text-slate-800 mb-8 group-hover:text-blue-500/50 group-hover:scale-110 transition-all duration-700">
-          {/* Aethelred Owl Placeholder */}
           <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4.5 4L7 6M19.5 4L17 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
             <path d="M12 21C16 19.5 19.5 15.5 19.5 9.5C19.5 5 16 3 12 3C8 3 4.5 5 4.5 9.5C4.5 15.5 8 19.5 12 21Z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
@@ -72,7 +75,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
   }
 
   return (
-    <div className="w-full max-w-2xl space-y-8 animate-in fade-in zoom-in-95 duration-1000">
+    <div className="w-full max-w-2xl space-y-8 animate-in fade-in zoom-in-95 duration-1000 pb-12">
       <div className={`relative group w-full ${getAspectClass(image.aspectRatio)} bg-slate-900 rounded-[3rem] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)] ring-1 ring-white/10`}>
         <img 
           src={image.url} 
@@ -113,35 +116,64 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image, isGenerating, onRefi
         </div>
       </div>
 
+      {/* Meta & Sources Section */}
       <div className="glass rounded-[2.5rem] p-10 border-slate-800/40 relative overflow-hidden group shadow-2xl backdrop-blur-3xl">
-        <div className="absolute -top-12 -right-12 p-8 opacity-5 group-hover:opacity-10 transition-all duration-1000 rotate-12 group-hover:rotate-0 text-slate-500">
-           <svg className="w-48 h-48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.5 4L7 6M19.5 4L17 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
-              <path d="M12 21C16 19.5 19.5 15.5 19.5 9.5C19.5 5 16 3 12 3C8 3 4.5 5 4.5 9.5C4.5 15.5 8 19.5 12 21Z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
-          </svg>
-        </div>
         <div className="space-y-6 relative">
           <div className="flex items-center gap-4">
-            <span className="text-[11px] font-black tracking-[0.3em] text-blue-500 uppercase px-3 py-1 bg-blue-500/10 rounded-lg border border-blue-500/20">Creative Meta</span>
+            <span className="text-[11px] font-black tracking-[0.3em] text-blue-500 uppercase px-3 py-1 bg-blue-500/10 rounded-lg border border-blue-500/20">Generation Profile</span>
             <div className="h-px flex-1 bg-gradient-to-r from-slate-800/50 to-transparent"></div>
           </div>
+          
           <p className="text-slate-200 text-lg leading-snug font-medium italic tracking-tight">"{image.prompt}"</p>
           
+          {/* Grounding Sources Chips (MANDATORY for Search Tool) */}
+          {sources.length > 0 && (
+            <div className="space-y-3 pt-4 animate-in slide-in-from-top-2">
+               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                 <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                 </svg>
+                 Research Verification Sources
+               </span>
+               <div className="flex flex-wrap gap-2">
+                 {sources.map((chunk: any, i: number) => {
+                   const uri = chunk.web?.uri || chunk.maps?.uri;
+                   const title = chunk.web?.title || chunk.maps?.title || "Reference Source";
+                   if (!uri) return null;
+                   return (
+                     <a 
+                       key={i} 
+                       href={uri} 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       className="px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-bold text-slate-400 hover:text-white hover:border-blue-500/50 transition-all flex items-center gap-2 group/source"
+                     >
+                       <span className="max-w-[140px] truncate">{title}</span>
+                       <svg className="w-2.5 h-2.5 opacity-0 group-hover/source:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                       </svg>
+                     </a>
+                   );
+                 })}
+               </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-slate-800/50">
              <div className="flex flex-col gap-1">
-               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Model Engine</span>
-               <span className="text-sm font-bold text-slate-100 flex items-center gap-2">
+               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Engine</span>
+               <span className="text-sm font-bold text-slate-100 flex items-center gap-2 uppercase tracking-tighter">
                  <div className={`w-2 h-2 rounded-full ${image.model.includes('pro') ? 'bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]' : 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]'}`}></div>
-                 {image.model === 'gemini-3-pro-image-preview' ? 'Pro 1K (Ultra)' : 'Flash (Fast)'}
+                 {image.model.replace('gemini-', '').replace('-preview', '')}
                </span>
              </div>
              <div className="flex flex-col gap-1">
-               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Composition</span>
+               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Ratio</span>
                <span className="text-sm font-bold text-slate-100 uppercase">{image.aspectRatio} Aspect</span>
              </div>
              <div className="flex flex-col gap-1">
-               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Rights</span>
-               <span className="text-sm font-bold text-slate-100">Open Source (MIT)</span>
+               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">License</span>
+               <span className="text-sm font-bold text-blue-400 tracking-widest uppercase text-[10px]">OS (MIT)</span>
              </div>
           </div>
         </div>

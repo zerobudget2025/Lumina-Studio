@@ -26,16 +26,13 @@ export const enhancePrompt = async (prompt: string): Promise<string> => {
   }
 };
 
-export const generateImage = async (params: GenerationParams): Promise<{ imageUrl: string; model: string }> => {
+export const generateImage = async (params: GenerationParams): Promise<{ imageUrl: string; model: string; groundingSources?: any[] }> => {
   const modelName = params.isPro ? 'gemini-3-pro-image-preview' : 'gemini-2.5-flash-image';
   const apiKey = process.env.API_KEY;
 
   if (!apiKey) {
     throw new Error("LUMINA_CORE: API Key missing.");
   }
-
-  // Internal trace signature
-  console.debug(`[LUMINA_ENGINE] Processing request for ${modelName} by NightOwl Studio.`);
 
   const ai = new GoogleGenAI({ apiKey });
 
@@ -62,6 +59,7 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
         aspectRatio: params.aspectRatio,
         ...(params.isPro ? { imageSize: "1K" } : {})
       },
+      // Grounding is mandatory for certain Pro queries
       ...(params.isPro ? { tools: [{ googleSearch: {} }] } : {})
     },
   });
@@ -69,6 +67,9 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
   let imageUrl = '';
   const candidate = response.candidates?.[0];
   
+  // Extract Grounding Chunks if present
+  const groundingSources = candidate?.groundingMetadata?.groundingChunks || [];
+
   if (candidate?.content?.parts) {
     for (const part of candidate.content.parts) {
       if (part.inlineData) {
@@ -82,7 +83,7 @@ export const generateImage = async (params: GenerationParams): Promise<{ imageUr
     throw new Error("Lumina Error: Content generation blocked by safety filters.");
   }
 
-  return { imageUrl, model: modelName };
+  return { imageUrl, model: modelName, groundingSources };
 };
 
 export const checkProAuth = async (): Promise<boolean> => {

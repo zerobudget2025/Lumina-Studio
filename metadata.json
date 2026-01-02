@@ -1,5 +1,21 @@
 {
   "name": "Lumina Image Studio",
-  "description": "A professional-grade AI image generation suite. A NightOwl creation, property of Just Me Media.",
-  "requestFramePermissions": []
+  "short_name": "Lumina",
+  "description": "Professional-grade AI image generation powered by Gemini. Open-source creative suite by NightOwl.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3503/3503816.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
 }
