@@ -1,7 +1,7 @@
 
 export type AspectRatio = '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
 
-export type Platform = 'youtube' | 'instagram' | 'twitch' | 'facebook' | 'devto' | 'mux' | 'manual' | 'x' | 'snapchat' | 'tiktok';
+export type Platform = 'youtube' | 'instagram' | 'twitch' | 'facebook' | 'devto' | 'mux' | 'manual' | 'x' | 'snapchat' | 'tiktok' | 'marketing';
 
 export interface Template {
   id: string;
@@ -25,7 +25,7 @@ export interface GeneratedImage {
 export interface GenerationParams {
   prompt: string;
   aspectRatio: AspectRatio;
-  baseImage?: string; // base64
+  baseImages?: string[]; // array of base64 strings
   isPro?: boolean;
   templateId?: string;
 }

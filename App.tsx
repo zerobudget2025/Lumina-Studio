@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ControlPanel from './components/ControlPanel';
 import ImageDisplay from './components/ImageDisplay';
 import HistoryPanel from './components/HistoryPanel';
 import { GeneratedImage, AspectRatio } from './types';
-import { generateImage, checkProAuth, requestProAuth } from './services/geminiService';
+import { generateImage, requestProAuth } from './services/geminiService';
 
 const App: React.FC = () => {
   const [history, setHistory] = useState<GeneratedImage[]>([]);
@@ -13,40 +13,19 @@ const App: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPro, setIsPro] = useState(false);
-  const [selectedBaseImage, setSelectedBaseImage] = useState<string | null>(null);
+  const [selectedBaseImages, setSelectedBaseImages] = useState<string[]>([]);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
   const [remixPrompt, setRemixPrompt] = useState<string | undefined>();
   const [remixRatio, setRemixRatio] = useState<AspectRatio | undefined>();
 
-  // Release heartbeat & PWA logic
   useEffect(() => {
-    console.log(
-      "%cLUMINA OS %cRELEASE V3.0 STABLE",
-      "color: white; background: #3b82f6; padding: 5px 10px; border-radius: 5px 0 0 5px; font-weight: 900;",
-      "color: white; background: #10b981; padding: 5px 10px; border-radius: 0 5px 5px 0; font-weight: 900;"
-    );
-
     const saved = localStorage.getItem('lumina_history_v3');
     if (saved) {
       try {
         setHistory(JSON.parse(saved));
-      } catch (e) {
-        console.error("Storage Recovery Failed", e);
-      }
+      } catch (e) { console.error(e); }
     }
-  }, []);
-
-  // Keyboard Shortcuts (Cmd+Enter to Generate)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        const submitBtn = document.querySelector('button[type="submit"]') as HTMLButtonElement;
-        if (submitBtn && !submitBtn.disabled) submitBtn.click();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   useEffect(() => {
@@ -64,15 +43,12 @@ const App: React.FC = () => {
 
   const handleTogglePro = async () => {
     if (!isPro) {
-      const hasKey = await checkProAuth();
-      if (!hasKey) {
-        await requestProAuth();
-      }
+      await requestProAuth();
       setIsPro(true);
       showToast("Pro Features Activated", "success");
     } else {
       setIsPro(false);
-      showToast("Returned to Flash Tier", "success");
+      showToast("Flash Tier Active", "success");
     }
   };
 
@@ -89,7 +65,7 @@ const App: React.FC = () => {
         prompt: finalPrompt,
         aspectRatio: params.aspectRatio,
         isPro,
-        baseImage: selectedBaseImage || undefined
+        baseImages: selectedBaseImages.length > 0 ? selectedBaseImages : undefined
       });
 
       const newImage: GeneratedImage = {
@@ -99,21 +75,21 @@ const App: React.FC = () => {
         timestamp: Date.now(),
         aspectRatio: params.aspectRatio,
         model: result.model,
-        // @ts-ignore - passing grounding metadata if available
+        // @ts-ignore
         groundingSources: result.groundingSources
       };
 
       setCurrentImage(newImage);
       setHistory(prev => [newImage, ...prev].slice(0, 20)); 
-      setSelectedBaseImage(null);
       setRemixPrompt(undefined);
       setRemixRatio(undefined);
-      showToast("Masterpiece Generated");
+      showToast(selectedBaseImages.length > 1 ? "Group Shot Synthesized" : "Image Synthesized");
     } catch (err: any) {
       let message = err.message || "Engine failure.";
       if (message.includes("Requested entity was not found")) {
-        message = "Pro Auth Expired. Please re-validate.";
+        message = "Key Validation Failed. Please select a valid paid API key.";
         setIsPro(false);
+        await requestProAuth();
       }
       setError(message);
       showToast(message, "error");
@@ -124,9 +100,8 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-blue-500/30 overflow-x-hidden">
-      <Header isPro={isPro} onTogglePro={handleTogglePro} />
+      <Header isPro={isPro} onTogglePro={handleTogglePro} onChangeKey={requestProAuth} />
       
-      {/* Release Toast */}
       {toast && (
         <div className={`fixed bottom-8 right-8 z-[100] px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-xl border flex items-center gap-3 animate-in slide-in-from-bottom-4 duration-300 ${
           toast.type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
@@ -144,8 +119,17 @@ const App: React.FC = () => {
               onGenerate={handleGenerate} 
               isGenerating={isGenerating} 
               isPro={isPro}
-              selectedBaseImage={selectedBaseImage}
-              onClearBaseImage={() => setSelectedBaseImage(null)}
+              selectedBaseImages={selectedBaseImages}
+              onClearBaseImages={() => setSelectedBaseImages([])}
+              onRemoveBaseImage={(index) => setSelectedBaseImages(prev => prev.filter((_, i) => i !== index))}
+              onImageUpload={(base64) => {
+                if (selectedBaseImages.length >= 3) {
+                  showToast("Maximum 3 people allowed for clarity", "error");
+                  return;
+                }
+                setSelectedBaseImages(prev => [...prev, base64]);
+                showToast("Identity Reference Added");
+              }}
               remixPrompt={remixPrompt}
               remixRatio={remixRatio}
             />
@@ -157,7 +141,7 @@ const App: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
-                  <span className="font-black uppercase tracking-widest text-[10px]">Engine Exception</span>
+                  <span className="font-black uppercase tracking-widest text-[10px]">System Exception</span>
                 </div>
                 <p className="font-medium pl-1 opacity-80">{error}</p>
               </div>
@@ -169,8 +153,8 @@ const App: React.FC = () => {
               image={currentImage} 
               isGenerating={isGenerating} 
               onRefine={(img) => {
-                setSelectedBaseImage(img.url);
-                showToast("Reference Image Set");
+                setSelectedBaseImages([img.url]);
+                showToast("Subject Locked from Canvas");
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />
@@ -199,26 +183,6 @@ const App: React.FC = () => {
           />
         </div>
       </main>
-
-      <footer className="py-20 border-t border-slate-900/50 glass flex flex-col items-center justify-center space-y-6">
-        <div className="flex items-center gap-4">
-          <span className="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-black text-blue-500 tracking-widest uppercase">v3.0 STABLE</span>
-          <span className="text-slate-700 text-[9px] font-black uppercase tracking-widest">&bull;</span>
-          <span className="text-slate-500 text-[10px] font-bold tracking-widest uppercase italic">Released by NightOwl</span>
-        </div>
-        <p className="text-slate-600 text-[10px] uppercase tracking-[0.4em] font-black">
-          &copy; 2024 Just Me Media &bull; Open Source Initiative
-        </p>
-        <div className="flex items-center gap-6">
-          <div className="h-px w-12 bg-slate-900"></div>
-          <div className="flex gap-4">
-            {['GitHub', 'Docs', 'License'].map(link => (
-              <span key={link} className="text-[10px] font-black text-slate-500 hover:text-blue-500 cursor-pointer transition-colors uppercase tracking-widest">{link}</span>
-            ))}
-          </div>
-          <div className="h-px w-12 bg-slate-900"></div>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -5,18 +5,32 @@ This guide covers the deployment of the Lumina Creative Suite and the configurat
 
 ---
 
-## 📋 Standard Deployment
+## 📋 Vercel + GitHub Deployment (Recommended)
 
-### 1. Environment Setup
-- **Global API Key**: The application requires an `API_KEY` from [Google AI Studio](https://aistudio.google.com/).
-- **Static Hosting**: Compatible with Vercel, Netlify, or GitHub Pages. No backend build step required.
+This is the fastest way to get a shareable URL.
 
-### 2. Quick-Start (Vercel/Netlify)
-1. Push the project files to a GitHub repository.
-2. Link the repository to your hosting provider.
-3. Define the **Environment Variable**:
-   - `API_KEY`: [Your Gemini API Key]
-4. Deploy. The application uses native ES6 modules; no bundler is strictly necessary if your server serves `.tsx` as modules.
+### 1. Create a Repository
+1. Initialize a new GitHub repository.
+2. Push all files (including `package.json`, `vite.config.ts`, and the source code).
+
+### 2. Connect to Vercel
+1. Log in to [Vercel](https://vercel.com).
+2. Click **"Add New"** > **"Project"**.
+3. Import your Lumina GitHub repository.
+4. **Environment Variables (CRITICAL)**:
+   - During the import step, find the **"Environment Variables"** section.
+   - Add a new entry:
+     - **Key**: `API_KEY`
+     - **Value**: [Your Gemini API Key from Google AI Studio]
+   - *Note: You do not need to push a `.env` file to GitHub. Vercel handles this securely in their dashboard.*
+5. Click **"Deploy"**.
+
+### 3. Local Development
+1. Clone the repository.
+2. Locate `env.template.txt` in the root directory.
+3. Rename `env.template.txt` to `.env`.
+4. Open `.env` and replace `your_api_key_here` with your actual key.
+5. Run `npm install` and `npm run dev`.
 
 ---
 

@@ -3,6 +3,10 @@ import React from 'react';
 import { Platform, Template } from '../types';
 
 const TEMPLATES: Template[] = [
+  // Marketing & SaaS
+  { id: 'saas-promo', name: 'SaaSPriceDB Promo', platform: 'marketing', aspectRatio: '16:9', promptSuffix: 'high-end 3D isometric dashboard, floating price tags, SaaS comparison charts, glassmorphism, cinematic corporate lighting, professional fintech aesthetic, 8k resolution, vibrant blues and emerald greens', icon: '💰' },
+  { id: 'ad-banner', name: 'Social Ad', platform: 'marketing', aspectRatio: '1:1', promptSuffix: 'clean professional social media advertisement, bold typography area, high contrast, commercial photography style, minimalist background', icon: '📢' },
+  
   // YouTube
   { id: 'yt-thumb', name: 'Thumbnail', platform: 'youtube', aspectRatio: '16:9', promptSuffix: 'high impact YouTube thumbnail, cinematic lighting, vibrant colors, professional graphic design', icon: '▶️' },
   { id: 'yt-banner', name: 'Channel Banner', platform: 'youtube', aspectRatio: '16:9', promptSuffix: 'panoramic YouTube channel art, wide landscape, professional aesthetic', icon: '📺' },
@@ -42,6 +46,7 @@ interface PlatformTab {
 
 const PLATFORMS: PlatformTab[] = [
   { id: 'manual', label: 'Custom', icon: '🛠️', color: 'bg-slate-600', category: 'core' },
+  { id: 'marketing', label: 'Marketing', icon: '📈', color: 'bg-emerald-600', category: 'core' },
   { id: 'devto', label: 'DEV.to', icon: '💻', color: 'bg-zinc-900', category: 'dev' },
   { id: 'mux', label: 'MUX', icon: '🎬', color: 'bg-rose-600', category: 'dev' },
   { id: 'youtube', label: 'YouTube', icon: '▶️', color: 'bg-red-600', category: 'social' },
@@ -69,7 +74,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   const filteredTemplates = TEMPLATES.filter(t => t.platform === selectedPlatform);
 
   const categories = [
-    { id: 'core', label: 'Core' },
+    { id: 'core', label: 'Core & Business' },
     { id: 'dev', label: 'Developer' },
     { id: 'social', label: 'Social' },
   ];
